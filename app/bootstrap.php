@@ -57,6 +57,11 @@ function save_setting(string $k, string $v): void {
 /* ---------- Helpers ---------- */
 function e($s): string { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); }
 function url(string $path = ''): string { global $CONFIG; return ($CONFIG['base_url'] ?? '') . '/' . ltrim($path, '/'); }
+/** URL d'un fichier statique avec version automatique (évite le cache navigateur après une mise à jour). */
+function asset(string $path): string {
+    $f = ROOT . '/' . ltrim($path, '/');
+    return url($path) . '?v=' . (is_file($f) ? filemtime($f) : 0);
+}
 function redirect(string $path): never { header('Location: ' . (str_starts_with($path, 'http') ? $path : url($path))); exit; }
 function money($n): string { return number_format((float) $n, 0, ',', ' ') . ' FCFA'; }
 function dfr(?string $d, bool $time = false): string { return $d ? date($time ? 'd/m/Y H:i' : 'd/m/Y', strtotime($d)) : ''; }

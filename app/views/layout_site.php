@@ -14,7 +14,7 @@ $fl = flash();
 <meta name="description" content="<?= e($name) ?> — salon de locks à Dakar pour hommes et femmes : sisterlocks, retwist, extensions, entretien.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="<?= url('assets/css/site.css') ?>?v=1">
+<link rel="stylesheet" href="<?= asset('assets/css/site.css') ?>">
 </head>
 <body>
 <div class="topbar">L'ART DES LOCKS À DAKAR <span>✦</span> EXPERTISE MASCULINE &amp; FÉMININE</div>

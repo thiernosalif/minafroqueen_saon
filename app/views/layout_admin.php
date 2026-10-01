@@ -7,7 +7,7 @@ $badge = ['rdv' => (int) val("SELECT COUNT(*) FROM appointments WHERE status IN 
 $cur = $seg[1] ?? ''; $fl = flash();
 ?><!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title><?= e($title ?: 'Administration') ?> — Admin</title>
-<link rel="stylesheet" href="<?= url('assets/css/admin.css') ?>?v=1"></head>
+<link rel="stylesheet" href="<?= asset('assets/css/admin.css') ?>"></head>
 <body>
 <aside class="side">
   <a class="logo" href="<?= url('admin') ?>">Min Afro Queen<small>Administration</small></a>
