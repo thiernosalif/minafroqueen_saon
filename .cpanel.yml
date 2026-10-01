@@ -1,8 +1,8 @@
 ---
 deployment:
   tasks:
-    # ADAPTEZ ce chemin : dossier racine de votre domaine sur o2switch (ex. /home/mbth3911/public_html ou /home/mbth3911/monsite.com)
-    - export DEPLOYPATH=/home/mbth3911/public_html/
+    # Dossier racine du sous-domaine minafroqueen.mbth3911.odns.fr (vérifier dans cPanel > Sous-domaines > Racine du document)
+    - export DEPLOYPATH=/home/mbth3911/minafroqueen.mbth3911.odns.fr/
     - /bin/mkdir -p $DEPLOYPATH
     - /bin/cp -R index.php install.php .htaccess app assets $DEPLOYPATH
     - /bin/mkdir -p $DEPLOYPATH/uploads $DEPLOYPATH/storage
