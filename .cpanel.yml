@@ -4,7 +4,7 @@ deployment:
     # Dossier racine du sous-domaine minafroqueen.kanderimmo.com (vérifier dans cPanel > Sous-domaines > Racine du document)
     - export DEPLOYPATH=/home/mbth3911/minafroqueen.kanderimmo.com/
     - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -R index.php install.php .htaccess app assets $DEPLOYPATH
+    - /bin/cp -R index.php .htaccess app assets $DEPLOYPATH
     - /bin/mkdir -p $DEPLOYPATH/uploads $DEPLOYPATH/storage
     - /bin/cp uploads/.htaccess $DEPLOYPATH/uploads/.htaccess
     - /bin/cp storage/.htaccess $DEPLOYPATH/storage/.htaccess
