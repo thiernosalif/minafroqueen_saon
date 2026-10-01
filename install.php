@@ -4,7 +4,11 @@ declare(strict_types=1);
 require __DIR__ . '/app/bootstrap.php';
 
 $msg = ''; $done = false;
-try { $installed = (int) val('SELECT COUNT(*) FROM users'); } catch (Throwable $e) { $installed = 0; $dbErr = $e->getMessage(); }
+$installed = 0;
+try { db(); } catch (Throwable $e) { $dbErr = $e->getMessage(); }          // vraie panne de connexion
+if (!isset($dbErr)) {
+    try { $installed = (int) val('SELECT COUNT(*) FROM users'); } catch (Throwable $e) { $installed = 0; }  // table absente = pas encore installé
+}
 
 if ($installed) {
     $msg = 'Le site est déjà installé. Supprimez le fichier install.php du serveur.';
