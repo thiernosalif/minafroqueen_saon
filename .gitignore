@@ -4,3 +4,4 @@ uploads/*
 !uploads/.gitkeep
 !uploads/.htaccess
 .DS_Store
+logo-*.png

@@ -20,8 +20,8 @@ $fl = flash();
 <div class="topbar">L'ART DES LOCKS À DAKAR <span>✦</span> EXPERTISE MASCULINE &amp; FÉMININE</div>
 <header class="header">
   <a class="brand" href="<?= url() ?>" aria-label="<?= e($name) ?>">
-    <?php if ($logo): ?><img src="<?= img($logo) ?>" alt="" height="44"><?php endif; ?>
-    <span><?= e($name) ?></span>
+    <?php if ($logo): ?><img class="logo" src="<?= img($logo) ?>" alt="<?= e($name) ?>">
+    <?php else: ?><span><?= e($name) ?></span><?php endif; ?>
   </a>
   <button class="burger" aria-label="Menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
   <nav class="nav">
