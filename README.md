@@ -22,3 +22,6 @@ php -S localhost:8000 storage/devrouter.php
 
 ## Vidéos
 Upload mp4 limité par PHP (`upload_max_filesize`, `post_max_size`) : augmentez-les dans cPanel → *MultiPHP INI Editor* (ex. 128M), ou collez un lien YouTube/Vimeo.
+
+## Photos
+Les images envoyées via l'admin sont automatiquement réduites (1600 px max), orientées correctement, compressées et débarrassées de leurs métadonnées (GPS). Les GIF sont conservés tels quels.

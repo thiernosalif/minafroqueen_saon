@@ -101,8 +101,40 @@ function upload(string $field, string $kind = 'image'): ?string {
     if (!isset($allowed[$mime])) { flash('Format de fichier non autorisé.', 'err'); return null; }
     $name = date('Ymd-His') . '-' . bin2hex(random_bytes(4)) . '.' . $allowed[$mime];
     if (!is_dir(ROOT . '/uploads')) mkdir(ROOT . '/uploads', 0755, true);
-    if (!move_uploaded_file($f['tmp_name'], ROOT . '/uploads/' . $name)) { flash('Impossible d\'enregistrer le fichier.', 'err'); return null; }
+    $dest = ROOT . '/uploads/' . $name;
+    if ($kind === 'image' && process_image($f['tmp_name'], $mime, $dest)) return $name;   // redimensionnée + compressée
+    if (!move_uploaded_file($f['tmp_name'], $dest)) { flash('Impossible d\'enregistrer le fichier.', 'err'); return null; }
     return $name;
+}
+/**
+ * Réduit une photo (côté le plus long <= $max px), corrige l'orientation des photos de téléphone,
+ * retire les métadonnées (GPS...) et la compresse. Écrit le résultat dans $dest.
+ * Retourne false si on ne peut pas la traiter : l'appelant garde alors le fichier d'origine.
+ */
+function process_image(string $tmp, string $mime, string $dest, int $max = 1600): bool {
+    if (!function_exists('imagecreatetruecolor') || !in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true)) return false;
+    $info = @getimagesize($tmp);
+    if (!$info) return false;
+    [$w, $h] = $info;
+    if ($w * $h > 60_000_000) return false;                                   // trop lourde pour la mémoire du serveur
+    @ini_set('memory_limit', '512M');
+    $src = match ($mime) { 'image/jpeg' => @imagecreatefromjpeg($tmp), 'image/png' => @imagecreatefrompng($tmp), default => @imagecreatefromwebp($tmp) };
+    if (!$src) return false;
+
+    if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {          // photo de téléphone : bon sens de lecture
+        $o = @exif_read_data($tmp)['Orientation'] ?? 1;
+        $angle = [3 => 180, 6 => -90, 8 => 90][$o] ?? 0;
+        if ($angle) { $rot = imagerotate($src, $angle, 0); if ($rot) { $src = $rot; [$w, $h] = [imagesx($src), imagesy($src)]; } }
+    }
+    $ratio = min(1, $max / max($w, $h));
+    $nw = max(1, (int) round($w * $ratio)); $nh = max(1, (int) round($h * $ratio));
+    $out = imagecreatetruecolor($nw, $nh);
+    if ($mime !== 'image/jpeg') { imagealphablending($out, false); imagesavealpha($out, true); imagefill($out, 0, 0, imagecolorallocatealpha($out, 0, 0, 0, 127)); }
+    imagecopyresampled($out, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
+    $ok = match ($mime) { 'image/jpeg' => imagejpeg($out, $dest, 82), 'image/png' => imagepng($out, $dest, 7), default => imagewebp($out, $dest, 82) };
+    imagedestroy($src); imagedestroy($out);
+    if ($ok && is_file($dest) && filesize($dest) > filesize($tmp) && $ratio >= 1 && $mime === 'image/jpeg') { return false; } // pas de gain : on garde l'original
+    return (bool) $ok;
 }
 function delete_upload(?string $name): void {
     if ($name && preg_match('/^[\w.-]+$/', $name)) @unlink(ROOT . '/uploads/' . $name);
