@@ -1,5 +1,9 @@
 <?php
-$services = all("SELECT * FROM services WHERE active = 1 ORDER BY sort, id LIMIT 6");
+// 3 soins femmes + 3 soins hommes pour montrer que le salon accueille tout le monde
+$services = array_merge(
+    all("SELECT * FROM services WHERE active = 1 AND category = 'femmes' ORDER BY sort, id LIMIT 3"),
+    all("SELECT * FROM services WHERE active = 1 AND category = 'hommes' ORDER BY sort, id LIMIT 3")
+);
 $posts = all("SELECT * FROM posts WHERE published = 1 ORDER BY created DESC LIMIT 3");
 $products = all("SELECT * FROM products WHERE active = 1 ORDER BY created DESC LIMIT 3");
 $reviews = all("SELECT * FROM reviews WHERE status = 'approved' ORDER BY created DESC LIMIT 3");
