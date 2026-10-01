@@ -1,0 +1,6 @@
+config.php
+storage/*.sqlite
+uploads/*
+!uploads/.gitkeep
+!uploads/.htaccess
+.DS_Store

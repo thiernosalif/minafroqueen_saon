@@ -1,0 +1,28 @@
+Options -Indexes
+DirectoryIndex index.php
+
+# Sécurité : interdit l'accès direct aux dossiers internes
+RewriteEngine On
+RewriteRule ^(app|storage)/ - [F,L]
+RewriteRule ^(config\.php|config\.sample\.php|\.cpanel\.yml|README\.md)$ - [F,L]
+
+# Pas d'exécution de scripts dans uploads
+<IfModule mod_php.c>
+  RewriteRule ^uploads/.*\.(php|phtml|phar)$ - [F,L]
+</IfModule>
+RewriteRule ^uploads/.*\.(php|phtml|phar)$ - [F,L]
+
+# Tout le reste passe par le routeur (sauf fichiers existants)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+
+# Cache des fichiers statiques
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType text/css "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+</IfModule>
